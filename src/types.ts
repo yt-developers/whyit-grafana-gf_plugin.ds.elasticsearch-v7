@@ -3,10 +3,25 @@ import { DataQuery, DataSourceJsonData } from '@grafana/data';
 export interface MyQuery extends DataQuery {
   queryText?: string;
   constant: number;
+  description: string;
+  method: string;
+  url: string;
+  queryType: string;
+  toEscapeFilter?: string;
+  requestBody?: string;
+  fields: string;
+  alias?: string;
+  seriesAxisShowInterval?: number;
+  seriesAxisSubstr?: string;
 }
 
 export const defaultQuery: Partial<MyQuery> = {
-  constant: 6.5,
+  method: 'GET',
+  url: 'customer/_search',
+  requestBody: '',
+  fields: '[ { "text": "key", "text": "value" } ]',
+  alias: 'Unknown',
+  seriesAxisShowInterval: 1
 };
 
 /**
