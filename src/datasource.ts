@@ -182,14 +182,12 @@ export class DataSource extends DataSourceApi<MyQuery, MyDataSourceOptions> {
     });
   }
 
-  testDatasource() {
+  async testDatasource() {
     // Implement a health check for your data source.
 
-    return new Promise((resolve, reject) => {
-      resolve({
-        status: 'success',
-        message: 'Success',
-      });
-    });
+    return {
+      status: 'success',
+      message: 'Success',
+    }
   }
 }
