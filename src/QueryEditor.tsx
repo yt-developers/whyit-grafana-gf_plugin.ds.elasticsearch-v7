@@ -1,7 +1,7 @@
 import defaults from 'lodash/defaults';
 
 import React, { PureComponent, ChangeEvent } from 'react';
-import { LegacyForms, Select } from '@grafana/ui';
+import { LegacyForms, Select, CodeEditor } from '@grafana/ui';
 import { QueryEditorProps, SelectableValue } from '@grafana/data';
 import { DataSource } from './datasource';
 import { MyQuery, MyDataSourceOptions, defaultQuery } from './types';
@@ -51,9 +51,9 @@ export class QueryEditor extends PureComponent<Props> {
     onChange({ ...query, seriesAxisSubstr: event.target.value });
   };
 
-  onRequestBodyChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
+  onRequestBodyChange = (value: string) => {
     const { onChange, query } = this.props;
-    onChange({ ...query, requestBody: event.target.value });
+    onChange({ ...query, requestBody: value });
   };
 
   onFieldsChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -121,7 +121,16 @@ export class QueryEditor extends PureComponent<Props> {
         </div>
         <div className="gf-form">
           <span className="gf-form-label">Request Body</span>
-          <textarea className="gf-form-input" rows={10} value={requestBody || ''} onChange={this.onRequestBodyChange}></textarea>
+          <div style={{width:"100%"}}>
+            <CodeEditor 
+              width="100%"
+              height="200px"
+              language='json' 
+              showLineNumbers={true}
+              value={requestBody || ''} 
+              onBlur={this.onRequestBodyChange}>
+            </CodeEditor>
+          </div>
         </div>
       </div>
     );

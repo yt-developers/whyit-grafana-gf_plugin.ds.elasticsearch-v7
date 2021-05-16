@@ -40,3 +40,12 @@ Grafana supports a wide range of data sources, including Prometheus, MySQL, and 
 - [Grafana documentation](https://grafana.com/docs/)
 - [Grafana Tutorials](https://grafana.com/tutorials/) - Grafana Tutorials are step-by-step guides that help you make the most of Grafana
 - [Grafana UI Library](https://developers.grafana.com/ui) - UI components to help you build interfaces using Grafana Design System
+
+# Whyit Node by hj.choi
+
+## diff from gf_plugin.ds-elasticsearch(v6)
+
+- 대부분 v6 버전과 그대로 호환되나 QueryEditor에 사용되던 PanelOptionGroup 컴포넌트가 에러 없이 빌드되지만 실행에 문제가 있었음
+- 위 컴포넌트 제외한 것 외엔 큰 변경점은 없는 것으로 보임
+- 현재 query 처리 로직은 v6 코드와 동일하며 async 대신 promise 객체 리턴하는 방식 그대로 사용 중. 동작은 잘 됨
+  - test 함수는 async 로 변경했으나 메인 query 함수는 v6 와 같이 promise 리턴 형태임
