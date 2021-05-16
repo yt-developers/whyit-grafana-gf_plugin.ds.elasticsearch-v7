@@ -1,7 +1,7 @@
 import defaults from 'lodash/defaults';
 
 import React, { PureComponent, ChangeEvent } from 'react';
-import { LegacyForms, PanelOptionsGroup, Select } from '@grafana/ui';
+import { LegacyForms, Select } from '@grafana/ui';
 import { QueryEditorProps, SelectableValue } from '@grafana/data';
 import { DataSource } from './datasource';
 import { MyQuery, MyDataSourceOptions, defaultQuery } from './types';
@@ -88,7 +88,7 @@ export class QueryEditor extends PureComponent<Props> {
       { label: 'Date Histogram to Series', value: 'date-series' },
     ];
     return (
-      <PanelOptionsGroup title="ES Query">
+      <div>
         <div className="gf-form">
           <FormField
             width={4}
@@ -152,7 +152,7 @@ export class QueryEditor extends PureComponent<Props> {
           <span className="gf-form-label">Request Body</span>
           <textarea className="gf-form-input" rows={10} value={requestBody || ''} onChange={this.onRequestBodyChange}></textarea>
         </div>
-      </PanelOptionsGroup>
+      </div>
     );
   }
 }
