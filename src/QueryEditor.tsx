@@ -11,18 +11,6 @@ const { FormField } = LegacyForms;
 type Props = QueryEditorProps<DataSource, MyQuery, MyDataSourceOptions>;
 
 export class QueryEditor extends PureComponent<Props> {
-  onQueryTextChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const { onChange, query } = this.props;
-    onChange({ ...query, queryText: event.target.value });
-  };
-
-  onConstantChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const { onChange, query, onRunQuery } = this.props;
-    onChange({ ...query, constant: parseFloat(event.target.value) });
-    // executes the query
-    onRunQuery();
-  };
-
   onDescriptionChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { onChange, query } = this.props;
     onChange({ ...query, description: event.target.value });
@@ -75,7 +63,7 @@ export class QueryEditor extends PureComponent<Props> {
 
   render() {
     const query = defaults(this.props.query, defaultQuery);
-    const { queryText, constant, description, method, url, queryType, toEscapeFilter, requestBody, fields, alias, seriesAxisShowInterval, seriesAxisSubstr } = query;
+    const { description, method, url, queryType, toEscapeFilter, requestBody, fields, alias, seriesAxisShowInterval, seriesAxisSubstr } = query;
 
     const selectOptions = [{ label: 'GET', value: 'GET' }, { label: 'POST', value: 'POST' }];
     const queryTypeOptions = [
@@ -89,23 +77,6 @@ export class QueryEditor extends PureComponent<Props> {
     ];
     return (
       <div>
-        <div className="gf-form">
-          <FormField
-            width={4}
-            value={constant}
-            onChange={this.onConstantChange}
-            label="Constant"
-            type="number"
-            step="0.1"
-          />
-          <FormField
-            labelWidth={8}
-            value={queryText || ''}
-            onChange={this.onQueryTextChange}
-            label="Query Text"
-            tooltip="Not used yet"
-          />
-        </div>
         <div className="gf-form">
           <FormField
             labelWidth={8}
