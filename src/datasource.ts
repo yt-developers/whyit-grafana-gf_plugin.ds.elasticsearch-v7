@@ -83,6 +83,22 @@ export class DataSource extends DataSourceApi<MyQuery, MyDataSourceOptions> {
               refId: query.refId,
             };
             return resolve(resultData);
+          } else if (query.queryType === 'table-aggs-1') {
+            const columns: any[] = JSON.parse(query.fields);
+            const rows: any = [];
+            if (result.data.aggregations) {
+              const datas = result.data.aggregations;
+              datas['2'].buckets.forEach((single: any) => {
+                rows.push([single.key, single['1'].value]);
+              });
+            }
+            const resultData = {
+              type: 'table',
+              columns: columns,
+              rows: rows,
+              refId: query.refId,
+            };
+            return resolve(resultData);
           } else if (query.queryType === 'single-value-aggs') {
             // no grafana built-in panels handle this result type
             let aggsResult = null;

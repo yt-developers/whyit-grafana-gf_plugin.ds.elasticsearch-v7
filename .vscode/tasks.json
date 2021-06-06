@@ -1,0 +1,21 @@
+{
+    "version": "2.0.0",
+    "options": {
+        "env": {
+        }
+    },
+    "tasks": [
+        {
+            "label": "package plugin tar",
+            "type": "shell",
+            "command": "fab package",
+            "problemMatcher": []
+        },
+        {
+            "label": "ec2dev grafana7: deploy plugin",
+            "type": "shell",
+            "command": "fab deploy_plugin:__system,grafana7,hosts=YT@172.31.32.212",
+            "problemMatcher": []
+        }
+    ]
+}
