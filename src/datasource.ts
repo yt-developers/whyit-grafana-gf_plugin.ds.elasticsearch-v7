@@ -83,6 +83,22 @@ export class DataSource extends DataSourceApi<MyQuery, MyDataSourceOptions> {
               refId: query.refId,
             };
             return resolve(resultData);
+          } else if (query.queryType === 'table-aggs-doc-count') {
+            const columns: any[] = JSON.parse(query.fields);
+            const rows: any = [];
+            if (result.data.aggregations) {
+              const datas = result.data.aggregations;
+              datas['1'].buckets.forEach((single: any) => {
+                rows.push([single.key, single['doc_count']]);
+              });
+            }
+            const resultData = {
+              type: 'table',
+              columns: columns,
+              rows: rows,
+              refId: query.refId,
+            };
+            return resolve(resultData);
           } else if (query.queryType === 'table-aggs-1') {
             const columns: any[] = JSON.parse(query.fields);
             const rows: any = [];
