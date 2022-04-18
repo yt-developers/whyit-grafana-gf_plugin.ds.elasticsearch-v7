@@ -12,6 +12,12 @@
             "problemMatcher": []
         },
         {
+            "label": "dev1 kt-domestic: deploy plugin",
+            "type": "shell",
+            "command": "fab deploy_plugin:kt-domestic,grafana,hosts=YT@dev1.whyit.co.kr:43321",
+            "problemMatcher": []
+        }
+        {
             "label": "ec2dev grafana7: deploy plugin",
             "type": "shell",
             "command": "fab deploy_plugin:__system,grafana7,hosts=YT@172.31.32.212",

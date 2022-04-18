@@ -69,6 +69,7 @@ export class QueryEditor extends PureComponent<Props> {
     const queryTypeOptions = [
       { label: 'Normal', value: '' },
       { label: 'Table', value: 'table' },
+      { label: 'Table Aggs Doc-Count Bucket', value: 'table-aggs-doc-count' },
       { label: 'Table Aggs 1 Bucket', value: 'table-aggs-1' },
       { label: 'Single Value Aggs', value: 'single-value-aggs' },   // for single value aggs, pipeline aggs(avg_bucket)
       { label: 'Date Histogram 1 Bucket', value: 'date-histogram-1' },

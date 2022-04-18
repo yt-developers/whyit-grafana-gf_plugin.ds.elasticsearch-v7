@@ -36,11 +36,15 @@
   "routes": [
     {
       "path": "dev2",
-      "url": "http://172.31.41.177:9200"
+      "url": "http://dev1.whyit.co.kr:48093/"
+    },
+    {
+      "path": "domestic_es",
+      "url": "http://192.168.10.21:9200"
     },
     {
       "path": "arcus_es",
-      "url": "http://192.168.222.72:9200/"
+      "url": "http://dev1.whyit.co.kr:48093/"
     }
   ]
 }
