@@ -127,6 +127,21 @@ export class DataSource extends DataSourceApi<MyQuery, MyDataSourceOptions> {
               rows: [aggsResult],
               refId: query.refId,
             });
+          } else if (query.queryType === 'date-histogram-doc-count') {
+            let singleData = {};
+            if (result.data.aggregations) {
+              const datas = result.data.aggregations;
+              const datapoints: any = [];
+              datas["1"].buckets.forEach((single: any) => {
+                datapoints.push([single.doc_count, single.key]);
+              });
+              singleData = {
+                target: query.alias, // todo: extract to option
+                datapoints: datapoints,
+                refId: query.refId,
+              };
+            }
+            return resolve(singleData);
           } else if (query.queryType === 'date-histogram-1') {
             let singleData = {};
             if (result.data.aggregations) {
