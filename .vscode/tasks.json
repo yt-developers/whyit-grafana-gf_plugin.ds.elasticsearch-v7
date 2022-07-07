@@ -12,11 +12,17 @@
             "problemMatcher": []
         },
         {
+            "label": "agms ubuntu: deploy plugin",
+            "type": "shell",
+            "command": "fab -p 'P@ssw0rd!@#' deploy_plugin:agms-ems,grafana,hosts=trustar-dev@dev1.whyit.co.kr:43323",
+            "problemMatcher": []
+        },
+        {
             "label": "dev1 kt-domestic: deploy plugin",
             "type": "shell",
             "command": "fab deploy_plugin:kt-domestic,grafana,hosts=YT@dev1.whyit.co.kr:43321",
             "problemMatcher": []
-        }
+        },
         {
             "label": "ec2dev grafana7: deploy plugin",
             "type": "shell",

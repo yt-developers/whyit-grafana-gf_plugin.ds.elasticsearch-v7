@@ -40,11 +40,11 @@
     },
     {
       "path": "domestic_es",
-      "url": "http://192.168.10.21:9200"
+      "url": "http://211.43.210.250:9200/"
     },
     {
-      "path": "arcus_es",
-      "url": "http://dev1.whyit.co.kr:48093/"
+      "path": "agms",
+      "url": "http://dev1.whyit.co.kr:9292/"
     }
   ]
 }

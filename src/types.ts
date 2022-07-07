@@ -1,4 +1,4 @@
-import { DataQuery, DataSourceJsonData } from '@grafana/data';
+import { DataQuery, DataSourceJsonData, MetricFindValue } from '@grafana/data';
 
 export interface MyQuery extends DataQuery {
   description: string;
@@ -34,4 +34,24 @@ export interface MyDataSourceOptions extends DataSourceJsonData {
  */
 export interface MySecureJsonData {
   apiKey?: string;
+}
+
+export interface MyVariableQuery {
+  method: string;
+  url: string;
+  queryType: string;
+  toEscapeFilter?: string;
+  requestBody?: string;
+  fields: string;
+}
+
+export const defaultVariableQuery: Partial<MyVariableQuery> = {
+  method: 'GET',
+  url: 'customer/_search',
+  requestBody: '',
+  fields: '[ { "text": "key", "text": "value" } ]',
+};
+
+export interface MyMetricFindValue extends MetricFindValue {
+  value?: string;
 }
