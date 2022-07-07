@@ -4,10 +4,11 @@ import {
   DataQueryRequest,
   DataQueryResponse,
   DataSourceApi,
-  DataSourceInstanceSettings 
+  DataSourceInstanceSettings,
+  MetricFindValue
 } from '@grafana/data';
 
-import { MyQuery, MyDataSourceOptions } from './types';
+import { MyQuery, MyDataSourceOptions, MyVariableQuery, MyMetricFindValue } from './types';
 // import { MutableDataFrame, FieldType } from '@grafana/data';
 
 export class DataSource extends DataSourceApi<MyQuery, MyDataSourceOptions> {
@@ -20,24 +21,26 @@ export class DataSource extends DataSourceApi<MyQuery, MyDataSourceOptions> {
     this.url = instanceSettings.url;
   }
 
-  doRequest(query: any) {
+  doRequest(query: any, scopedVars: any) {
     // options.withCredentials = this.withCredentials;
     // options.headers = this.headers;
 
     // return this.backendSrv.datasourceRequest(options);
 
+    const templatedUrl = this.templateSrv.replace(query.url, scopedVars);
+    const templatedReqBody = this.templateSrv.replace(query.requestBody, scopedVars);
     return this.backendSrv.datasourceRequest({
       // const result = await getBackendSrv().fetch<any>({
       method: query.method,
       // url: this.url + '/local_es/alert*/_search',
-      url: this.url + query.url,
+      url: this.url + templatedUrl,
       // url: '/local_es/' + query.url,
       // url: 'http://192.168.43.46:9200',    // why is this simple es url is not working
       // params: query,
       // data: {
       //   size: 1
       // }
-      data: query.method === 'POST' ? query.requestBody : null,
+      data: query.method === 'POST' ? templatedReqBody : null,
     });
   }
 
@@ -62,7 +65,7 @@ export class DataSource extends DataSourceApi<MyQuery, MyDataSourceOptions> {
       }
 
       return new Promise((resolve, reject) => {
-        this.doRequest(query).then((result: any) => {
+        this.doRequest(query, options.scopedVars).then((result: any) => {
           // console.log(result)
           if (query.queryType === 'table') {
             const columns: any[] = JSON.parse(query.fields);
@@ -226,6 +229,55 @@ export class DataSource extends DataSourceApi<MyQuery, MyDataSourceOptions> {
       // console.log(collectData);
       console.log('ds-es');
       return collectData;
+    });
+  }
+
+  metricFindQuery(query: MyVariableQuery, options?: any): Promise<MetricFindValue[]> {
+    console.log('---------- metricFindQuery');
+    console.log(query);
+    console.log(options);
+    return new Promise((resolve, reject) => {
+      this.doRequest(query, options.scopedVars).then((result: any) => {
+        console.log(result)
+
+        // let columns: any[] = [];
+        const rows: any = [];
+        if (query.queryType === 'raw-fields') {
+          // { "value": "XXX" } : literal values
+          // or 
+          // { "key": "XXX", "value": "YYY" } : named values
+          const fields: any = JSON.parse(query.fields);
+          if (result.data.hits.hits) {
+            const datas = result.data.hits.hits;
+            datas.forEach((data: any) => {
+              const src = data._source;
+              if (fields.key) {
+                rows.push({
+                  text:  src[fields.key], 
+                  value: src[fields.value]
+                })
+              } else {
+                rows.push({
+                  text:  src[fields.value]
+                })
+              }
+            });
+          }
+        } else if (query.queryType === 'terms-aggs') {
+          if (result.data.aggregations['1'].buckets) {
+            const datas = result.data.aggregations['1'].buckets;
+            datas.forEach((data: any) => {
+              rows.push({
+                text:  data.key
+              })
+            });
+          }
+        }
+        console.log('rows =======');
+        console.log(rows);
+        // const rslt: MyMetricFindValue[] = rows.map((o: any) => (o.__text && o.__value ? { text: o.__text, value: o.__value } : { text: o[Object.keys(o)[0]] }));
+        return resolve(rows);
+      });
     });
   }
 
