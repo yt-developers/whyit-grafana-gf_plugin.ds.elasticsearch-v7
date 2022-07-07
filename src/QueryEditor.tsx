@@ -72,6 +72,7 @@ export class QueryEditor extends PureComponent<Props> {
       { label: 'Table Aggs Doc-Count Bucket', value: 'table-aggs-doc-count' },
       { label: 'Table Aggs 1 Bucket', value: 'table-aggs-1' },
       { label: 'Single Value Aggs', value: 'single-value-aggs' },   // for single value aggs, pipeline aggs(avg_bucket)
+      { label: 'Date Histogram Doc-Count Bucket', value: 'date-histogram-doc-count' }, // for default doc count aggs
       { label: 'Date Histogram 1 Bucket', value: 'date-histogram-1' },
       { label: 'Date Histogram 2 Bucket', value: 'date-histogram-2' },
       { label: 'Series', value: 'series' },
