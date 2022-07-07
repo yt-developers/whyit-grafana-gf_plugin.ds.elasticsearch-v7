@@ -8,13 +8,11 @@ import {
   MetricFindValue
 } from '@grafana/data';
 
-import { MyQuery, MyDataSourceOptions, MyVariableQuery, MyMetricFindValue } from './types';
-// import { MutableDataFrame, FieldType } from '@grafana/data';
+import { MyQuery, MyDataSourceOptions, MyVariableQuery } from './types';
 
 export class DataSource extends DataSourceApi<MyQuery, MyDataSourceOptions> {
   url?: string;
 
-  // constructor(instanceSettings: DataSourceInstanceSettings<MyDataSourceOptions>, private backendSrv: any, templateSrv: any) {
   constructor(instanceSettings: DataSourceInstanceSettings<MyDataSourceOptions>, private backendSrv: any, private templateSrv: any) {
     super(instanceSettings);
 
@@ -245,15 +243,15 @@ export class DataSource extends DataSourceApi<MyQuery, MyDataSourceOptions> {
         if (query.queryType === 'raw-fields') {
           // { "value": "XXX" } : literal values
           // or 
-          // { "key": "XXX", "value": "YYY" } : named values
+          // { "value": "XXX", "name": "YYY" } : named values
           const fields: any = JSON.parse(query.fields);
           if (result.data.hits.hits) {
             const datas = result.data.hits.hits;
             datas.forEach((data: any) => {
               const src = data._source;
-              if (fields.key) {
+              if (fields.name) {
                 rows.push({
-                  text:  src[fields.key], 
+                  text:  src[fields.name], 
                   value: src[fields.value]
                 })
               } else {
@@ -275,7 +273,6 @@ export class DataSource extends DataSourceApi<MyQuery, MyDataSourceOptions> {
         }
         console.log('rows =======');
         console.log(rows);
-        // const rslt: MyMetricFindValue[] = rows.map((o: any) => (o.__text && o.__value ? { text: o.__text, value: o.__value } : { text: o[Object.keys(o)[0]] }));
         return resolve(rows);
       });
     });

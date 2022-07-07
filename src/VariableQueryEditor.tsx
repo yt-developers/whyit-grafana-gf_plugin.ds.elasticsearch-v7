@@ -18,13 +18,13 @@ export const VariableQueryEditor: React.FC<VariableQueryProps> = ({ onChange, qu
 
   const saveQuery = () => {
     console.log('saveQuery')
-    onChange(state, `${state.method}, ${state.url}, (${state.queryType})`);
+    onChange(state, `xxx ${state.method}, ${state.url}, (${state.queryType})`);
   };
 
   // for param codeEditor setState callback
   useEffect(() => {
     console.log('useEffect')
-    onChange(state, `${state.url}(${state.url})`);
+    // onChange(state, `${state.url}(${state.url})`);
     onChange(state, `${state.requestBody}(${state.requestBody})`);
   }, [onChange, state]);
 
