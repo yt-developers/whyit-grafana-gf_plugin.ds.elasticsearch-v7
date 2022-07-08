@@ -18,7 +18,7 @@ export const VariableQueryEditor: React.FC<VariableQueryProps> = ({ onChange, qu
 
   const saveQuery = () => {
     console.log('saveQuery')
-    onChange(state, `xxx ${state.method}, ${state.url}, (${state.queryType})`);
+    onChange(state, `${state.method}, ${state.url}, (${state.queryType})`);
   };
 
   // for param codeEditor setState callback
@@ -26,6 +26,7 @@ export const VariableQueryEditor: React.FC<VariableQueryProps> = ({ onChange, qu
     console.log('useEffect')
     // onChange(state, `${state.url}(${state.url})`);
     onChange(state, `${state.requestBody}(${state.requestBody})`);
+    onChange(state, `${state.postScript}(${state.postScript})`);
   }, [onChange, state]);
 
   // const handleChange = (event: React.FormEvent<HTMLInputElement>) =>
@@ -56,6 +57,10 @@ export const VariableQueryEditor: React.FC<VariableQueryProps> = ({ onChange, qu
 
   const onFieldsChange = (event: ChangeEvent<HTMLInputElement>) => {
     setState({ ...state, fields: event.target.value });
+  };
+
+  const onPostScriptChange = (value: string) => {
+    setState({ ...state, postScript: value });
   };
 
   const selectOptions = [{ label: 'GET', value: 'GET' }, { label: 'POST', value: 'POST' }];
@@ -101,6 +106,19 @@ export const VariableQueryEditor: React.FC<VariableQueryProps> = ({ onChange, qu
             showLineNumbers={true}
             value={state.requestBody || ''} 
             onBlur={onRequestBodyChange}>
+          </CodeEditor>
+        </div>
+      </div>
+      <div className="gf-form">
+        <span className="gf-form-label">Post Script</span>
+        <div style={{width:"100%"}}>
+          <CodeEditor 
+            width="100%"
+            height="100px"
+            language='javascript' 
+            showLineNumbers={true}
+            value={state.postScript || ''} 
+            onBlur={onPostScriptChange}>
           </CodeEditor>
         </div>
       </div>

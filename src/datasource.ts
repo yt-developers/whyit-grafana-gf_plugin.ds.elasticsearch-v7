@@ -236,7 +236,9 @@ export class DataSource extends DataSourceApi<MyQuery, MyDataSourceOptions> {
     console.log(options);
     return new Promise((resolve, reject) => {
       this.doRequest(query, options.scopedVars).then((result: any) => {
-        console.log(result)
+        if (query.postScript) {
+          eval('(function(data) {' + query.postScript + '})(result)');
+        }
 
         // let columns: any[] = [];
         const rows: any = [];

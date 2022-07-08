@@ -43,13 +43,15 @@ export interface MyVariableQuery {
   toEscapeFilter?: string;
   requestBody?: string;
   fields: string;
+  postScript?: string;
 }
 
 export const defaultVariableQuery: Partial<MyVariableQuery> = {
   method: 'GET',
-  url: 'customer/_search',
+  url: '/gf_proxy_name/_search',
   requestBody: '',
-  fields: '[ { "text": "key", "text": "value" } ]',
+  fields: '[ { "value": "xxx", "name": "yyy" } ]',
+  postScript: '',
 };
 
 export interface MyMetricFindValue extends MetricFindValue {
