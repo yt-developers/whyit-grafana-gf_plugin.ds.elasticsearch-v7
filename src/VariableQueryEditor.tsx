@@ -94,7 +94,7 @@ export const VariableQueryEditor: React.FC<VariableQueryProps> = ({ onChange, qu
         </div>
       </div>
       <div className="gf-form">
-        <FormField labelWidth={8} value={state.toEscapeFilter || ''} onBlur={onToEscapeFilterChange} label="Escaping Filter" tooltip="Lucene filter to escape double quotes" />
+        <FormField labelWidth={8} value={state.toEscapeFilter || ''} onBlur={saveQuery} onChange={onToEscapeFilterChange} label="Escaping Filter" tooltip="Lucene filter to escape double quotes" />
       </div>
       <div className="gf-form">
         <span className="gf-form-label">Request Body</span>

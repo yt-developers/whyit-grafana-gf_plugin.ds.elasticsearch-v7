@@ -20,13 +20,28 @@ export class DataSource extends DataSourceApi<MyQuery, MyDataSourceOptions> {
   }
 
   doRequest(query: any, scopedVars: any) {
+    console.log('duRequest scopedVars >>>>>>>>>>>>>>>>>>>>>>>>>>>>>..');
+    console.log(scopedVars);
     // options.withCredentials = this.withCredentials;
     // options.headers = this.headers;
 
     // return this.backendSrv.datasourceRequest(options);
 
     const templatedUrl = this.templateSrv.replace(query.url, scopedVars);
-    const templatedReqBody = this.templateSrv.replace(query.requestBody, scopedVars);
+    // const templatedReqBody = this.templateSrv.replace(query.requestBody, scopedVars);
+    let templatedReqBody = this.templateSrv.replace(query.requestBody, scopedVars, 'lucene');
+    const toEscapeFilters: string[] = query.toEscapeFilter?.split(',') || [];
+    toEscapeFilters.forEach(filter => {
+      const regex = new RegExp(filter.trim() + ':.*((.*))');
+      const matches: any = (templatedReqBody || '').match(regex);
+      if (! matches)
+        return;
+      const filterQuery = matches[0].substring(0, matches[0].indexOf(')') + 1);
+      const escapedQuery = filterQuery.replaceAll('"', '\\"');
+      templatedReqBody = (templatedReqBody || '').replace(filterQuery, escapedQuery);
+      // console.log(matches);
+    })
+    templatedReqBody = this.templateSrv.replace(templatedReqBody, scopedVars);
     return this.backendSrv.datasourceRequest({
       // const result = await getBackendSrv().fetch<any>({
       method: query.method,
@@ -50,20 +65,20 @@ export class DataSource extends DataSourceApi<MyQuery, MyDataSourceOptions> {
     const promises = options.targets.map(query => {
       // query.requestBody = this.templateSrv.replace(query.requestBody);
       // this.templateSrv.replace(target.query, options.scopedVars, 'lucene')     // built-in es 참조용
-      query.requestBody = this.templateSrv.replace(query.requestBody, options.scopedVars, 'lucene');
-      // query.requestBody = this.templateSrv.replace(query.requestBody);
-      // const regex = /org_id:.*\(.*\)/;
-      const toEscapeFilters: string[] = query.toEscapeFilter?.split(',') || [];
-      toEscapeFilters.forEach(filter => {
-        const regex = new RegExp(filter.trim() + ':.*((.*))');
-        const matches: any = (query.requestBody || '').match(regex);
-        if (! matches)
-          return;
-        const filterQuery = matches[0].substring(0, matches[0].indexOf(')') + 1);
-        const escapedQuery = filterQuery.replaceAll('"', '\\"');
-        query.requestBody = (query.requestBody || '').replace(filterQuery, escapedQuery);
-        // console.log(matches);
-      })
+      // query.requestBody = this.templateSrv.replace(query.requestBody, options.scopedVars, 'lucene');
+      // // query.requestBody = this.templateSrv.replace(query.requestBody);
+      // // const regex = /org_id:.*\(.*\)/;
+      // const toEscapeFilters: string[] = query.toEscapeFilter?.split(',') || [];
+      // toEscapeFilters.forEach(filter => {
+      //   const regex = new RegExp(filter.trim() + ':.*((.*))');
+      //   const matches: any = (query.requestBody || '').match(regex);
+      //   if (! matches)
+      //     return;
+      //   const filterQuery = matches[0].substring(0, matches[0].indexOf(')') + 1);
+      //   const escapedQuery = filterQuery.replaceAll('"', '\\"');
+      //   query.requestBody = (query.requestBody || '').replace(filterQuery, escapedQuery);
+      //   // console.log(matches);
+      // })
 
       return new Promise((resolve, reject) => {
         this.doRequest(query, options.scopedVars).then((result: any) => {
