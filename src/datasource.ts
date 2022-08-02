@@ -28,19 +28,25 @@ export class DataSource extends DataSourceApi<MyQuery, MyDataSourceOptions> {
     // return this.backendSrv.datasourceRequest(options);
 
     const templatedUrl = this.templateSrv.replace(query.url, scopedVars);
-    // const templatedReqBody = this.templateSrv.replace(query.requestBody, scopedVars);
-    let templatedReqBody = this.templateSrv.replace(query.requestBody, scopedVars, 'lucene');
-    const toEscapeFilters: string[] = query.toEscapeFilter?.split(',') || [];
-    toEscapeFilters.forEach(filter => {
-      const regex = new RegExp(filter.trim() + ':.*((.*))');
-      const matches: any = (templatedReqBody || '').match(regex);
-      if (! matches)
-        return;
-      const filterQuery = matches[0].substring(0, matches[0].indexOf(')') + 1);
-      const escapedQuery = filterQuery.replaceAll('"', '\\"');
-      templatedReqBody = (templatedReqBody || '').replace(filterQuery, escapedQuery);
-      // console.log(matches);
-    })
+
+    let templatedReqBody = query.requestBody;
+    if (query.toEscapeFilter && query.toEscapeFilter.trim().length > 0) {
+      const toEscapeFilters: string[] = query.toEscapeFilter?.split(',') || [];
+      toEscapeFilters.forEach(filter => {
+        filter = filter.trim();
+        const regex = new RegExp(filter + '.*\\:.*\\$' + filter);
+        const matches: any = (templatedReqBody || '').match(regex);
+        if (! matches)
+          return;
+        const matchStr = matches[0];
+        const matchIndex = matches.index;
+        const templatedStr = this.templateSrv.replace(matchStr, scopedVars, 'lucene');
+        const escapedTemplatedStr = templatedStr.replaceAll('"', '\\"');
+        templatedReqBody = templatedReqBody.substring(0, matchIndex) 
+                         + escapedTemplatedStr
+                         + templatedReqBody.substring(matchIndex + matchStr.length);
+      })
+    }
     templatedReqBody = this.templateSrv.replace(templatedReqBody, scopedVars);
     return this.backendSrv.datasourceRequest({
       // const result = await getBackendSrv().fetch<any>({
